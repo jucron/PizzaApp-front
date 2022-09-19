@@ -7,6 +7,7 @@ import {FeedbackComponent} from './feedback/feedback.component';
 import {ClientComponent} from './client.component';
 import {RouterModule} from "@angular/router";
 import {ClientRoutingModule} from "./client-routing.module";
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -20,7 +21,10 @@ import {ClientRoutingModule} from "./client-routing.module";
   imports: [
     CommonModule,
     RouterModule,
-    ClientRoutingModule
+    ClientRoutingModule,
+    ReactiveFormsModule
   ]
 })
-export class ClientModule { }
+export class ClientModule {
+
+}
