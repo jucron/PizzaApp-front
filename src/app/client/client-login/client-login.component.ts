@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ClientLoginService} from "../client-login.service";
+import {ClientService} from "../client.service";
 
 @Component({
   selector: 'app-client-login',
@@ -12,12 +12,12 @@ export class ClientLoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private clientService: ClientLoginService
+    private clientService: ClientService
   ) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      login: this.formBuilder.control('',Validators.required),
+      username: this.formBuilder.control('',Validators.required),
       password: this.formBuilder.control('')
     });
   }
@@ -26,4 +26,3 @@ export class ClientLoginComponent implements OnInit {
     this.clientService.processLogin(loginCredentials);
   }
 }
-

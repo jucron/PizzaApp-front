@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ClientService} from "../client.service";
 
 @Component({
   selector: 'app-order',
@@ -6,10 +8,25 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./order.component.scss']
 })
 export class OrderComponent implements OnInit {
+  orderForm: FormGroup;
+  pizzaFlavors = [
+    "Four cheese","Ham & Cheese","Tuna","Pepperoni","Veggie Pizza","Margherita","Hawaiian Pizza"];
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private clientService: ClientService
+  ) { }
 
   ngOnInit(): void {
+    this.orderForm = this.formBuilder.group({
+      clientName: this.formBuilder.control('',Validators.required),
+      pizzaFlavor: this.formBuilder.control('',Validators.required),
+      address: this.formBuilder.control('',Validators.required),
+      paid: this.formBuilder.control('')
+    });
   }
 
+  onSubmit(order) {
+    this.clientService.createOrder(order);
+  }
 }
