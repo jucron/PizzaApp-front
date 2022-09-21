@@ -1,0 +1,6 @@
+$border-track-color: 6px solid green;
+
+.col-md-1 {
+  border-left: $border-track-color;
+  border-right: $border-track-color;
+}

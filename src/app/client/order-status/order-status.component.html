@@ -1,1 +1,56 @@
-<p>order-status works!</p>
+<app-client></app-client>
+
+
+<div class="container-fluid">
+  <!-- row 4x4x4-->
+  <div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+      <p start>Your Order is accepted! Please follow the Status below:</p>
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">Order Id</th>
+          <th scope="col">Client Name</th>
+          <th scope="col">Delivery Address</th>
+          <th scope="col">Order Time</th>
+          <th scope="col">Paid online?</th>
+          <th scope="col">Order Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row">{{order.id | slice:0:8}}</th>
+          <td>{{order.clientName}}</td>
+          <td>{{order.address}}</td>
+          <td>{{order.orderTime}}</td>
+          <td>{{order.paid}}</td>
+          <td>{{order.status | uppercase}}</td>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
+    </div>
+    <p></p>
+
+    <div class="row">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-7">
+        <tr class="table-primary">
+          <td class="table-primary"><p>Confirmed</p><img *ngIf="order.status=='confirmed'" alt="Responsive image" class="img-fluid" src="assets/images/delivery-guy-in-bike.png"></td>
+          <td class="table-primary"><p>Accepted</p><img *ngIf="order.status=='accepted'" alt="Responsive image" class="img-fluid" src="assets/images/delivery-guy-in-bike.png"></td>
+          <td class="table-primary"><p>Baking</p><img *ngIf="order.status=='baking'" alt="Responsive image" class="img-fluid" src="assets/images/delivery-guy-in-bike.png"></td>
+          <td class="table-primary"><p>Pizza Ready</p><img *ngIf="order.status=='pizzaReady'" alt="Responsive image" class="img-fluid" src="assets/images/delivery-guy-in-bike.png"></td>
+          <td class="table-primary"><p>Delivering</p><img *ngIf="order.status=='delivering'" alt="Responsive image" class="img-fluid" src="assets/images/delivery-guy-in-bike.png"></td>
+          <td class="table-primary"><p>Pizza Delivered</p><img *ngIf="order.status=='pizzaDelivered'" alt="Responsive image" class="img-fluid" src="assets/images/delivery-guy-in-bike.png"></td>
+          <td class="table-primary"><p>Finished </p><img *ngIf="order.status=='finished'" alt="Responsive image" class="img-fluid" src="assets/images/delivery-guy-in-bike.png"></td>
+        </tr>
+        <img alt="Responsive image" class="img-fluid" src="assets/images/track.png">
+        <div class="col-md-2">
+      </div>
+    </div>
+
+  </div>
+</div>

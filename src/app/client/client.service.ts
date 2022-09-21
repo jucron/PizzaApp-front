@@ -7,15 +7,32 @@ import {Router} from "@angular/router";
   providedIn: 'root'
 })
 export class ClientService {
-  baseUrl = 'http://localhost:8081/';
+  static order: Order;
+  baseFlowableClientUrl = 'http://localhost:8081/flowable/client/';
+  baseAccountUrl = 'http://localhost:8081/accounts/';
   orderId: string;
+  baseOrderUrl = 'http://localhost:8081/orders/';
+  mainUser: string;
 
   constructor(private http: HttpClient,
               private router: Router) { }
 
   processLogin(credentials: LoginCredentials) {
     console.log('login worked')
-    this.http.post(this.baseUrl+'accounts/login',credentials)
+    this.http.post(this.baseAccountUrl+'login', credentials)
+      .subscribe(
+        (response: Response) => {
+          this.mainUser=response.message;
+          //todo: handle username not found (Security Impl)
+        },
+        catchError(this.handleError)
+      );
+    this.fetchActiveTask();
+  }
+
+  fetchActiveTask () {
+    console.log('fetchActiveTask worked')
+    this.http.get<Response>(this.baseFlowableClientUrl+this.mainUser)
       .subscribe(
         (response: Response) => {
           this.taskRoute(response.message);
@@ -27,15 +44,35 @@ export class ClientService {
   createOrder(order) {
     console.log('createOrder worked')
     console.log(order)
-    this.http.post(this.baseUrl+'flowable/',order)
+    this.http.post(this.baseFlowableClientUrl,order)
       .subscribe(
         (response: Response) => {
           this.orderId=response.message;
-          this.taskRoute("task_2");
+          this.getOrder();
+          this.fetchActiveTask();
         },
         catchError(this.handleError)
       );
+  }
 
+  completeTask(variables) {
+    console.log('completeTask worked')
+    this.http.put(this.baseFlowableClientUrl,variables)
+      .subscribe(
+        catchError(this.handleError)
+      );
+    this.fetchActiveTask();
+  }
+
+  getOrder() {
+    console.log('getOrder worked')
+    this.http.get(this.baseOrderUrl+this.orderId)
+      .subscribe(
+        (order: Order) => {
+          ClientService.order = order;
+        },
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -54,6 +91,9 @@ export class ClientService {
       case "task_3":
         this.router.navigate(['/client/feedback']);
         break;
+      default:
+        this.router.navigate(['/client/']);
+        break;
     }
   }
 }
@@ -64,4 +104,13 @@ export interface LoginCredentials {
 }
 interface Response {
   message: string;
+}
+export interface Order {
+  id: string;
+  clientName: string;
+  pizzaFlavor: string;
+  address: string ;
+  status: string ;
+  orderTime: string ;
+  paid: boolean ;
 }
