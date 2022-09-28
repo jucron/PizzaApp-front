@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ClientService} from "../client.service";
 
@@ -7,7 +7,7 @@ import {ClientService} from "../client.service";
   templateUrl: './client-login.component.html',
   styleUrls: ['./client-login.component.scss']
 })
-export class ClientLoginComponent implements OnInit {
+export class ClientLoginComponent implements OnInit, AfterViewInit {
   loginForm: FormGroup;
 
   constructor(
@@ -18,11 +18,20 @@ export class ClientLoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       username: this.formBuilder.control('',Validators.required),
-      password: this.formBuilder.control('')
+      password: this.formBuilder.control('',Validators.required)
     });
   }
 
   onSubmit(loginCredentials) {
     this.clientService.processLogin(loginCredentials);
+    this.routeThisPage()
+  }
+
+  ngAfterViewInit(): void {
+    this.routeThisPage()
+  }
+
+  routeThisPage() {
+    this.clientService.routeToCorrectPage("not_logged","task_0");
   }
 }

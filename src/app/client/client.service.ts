@@ -10,63 +10,85 @@ export class ClientService {
   static order: Order;
   baseFlowableClientUrl = 'http://localhost:8081/flowable/client/';
   baseAccountUrl = 'http://localhost:8081/accounts/';
-  orderId: string;
   baseOrderUrl = 'http://localhost:8081/orders/';
-  mainUser: string;
 
   constructor(private http: HttpClient,
               private router: Router) { }
 
-  processLogin(credentials: LoginCredentials) {
+  processLogin(credentials: Account) {
     console.log('login worked')
     this.http.post(this.baseAccountUrl+'login', credentials)
       .subscribe(
         (response: Response) => {
-          this.mainUser=response.message;
+          if (response==null) {
+            alert("ERROR: account not found")
+          } else {
+            localStorage.setItem('mainUsername',credentials.username)
+          }
           //todo: handle username not found (Security Impl)
         },
         catchError(this.handleError)
       );
-    this.fetchActiveTask();
   }
 
-  fetchActiveTask () {
-    console.log('fetchActiveTask worked')
-    this.http.get<Response>(this.baseFlowableClientUrl+this.mainUser)
+  processLogOUT(username: string) {
+    console.log('logOUT worked')
+    this.http.post(this.baseAccountUrl+'logout', username)
       .subscribe(
-        (response: Response) => {
-          this.taskRoute(response.message);
+        () => {
+            localStorage.clear();
         },
         catchError(this.handleError)
       );
+  }
+
+  routeToCorrectPage (currentPageLoginStatus: string, currentPageTaskStatus: string) {
+    console.log('routeToCorrectPage worked')
+    if (localStorage.getItem('mainUsername')!=null) {
+      console.log('mainUsername is Not Null!')
+      this.http.get<Response>(this.baseFlowableClientUrl+localStorage.getItem('mainUsername'))
+        .subscribe(
+          (response: Response) => {
+            let loginStatus = response.message;
+            let taskStatus = response.messageB;
+            if (loginStatus=='not_logged') {
+              localStorage.clear();
+            } else {
+              console.log(loginStatus+" "+taskStatus)
+              if (currentPageLoginStatus!=loginStatus || currentPageTaskStatus != currentPageTaskStatus) {
+                this.clientRoute(loginStatus, taskStatus);
+              }
+            }
+          },
+          catchError(this.handleError)
+        );
+    }
   }
 
   createOrder(order) {
     console.log('createOrder worked')
+    order.account = { username: localStorage.getItem('mainUsername')};
     console.log(order)
-    this.http.post(this.baseFlowableClientUrl,order)
-      .subscribe(
-        (response: Response) => {
-          this.orderId=response.message;
-          this.getOrder();
-          this.fetchActiveTask();
-        },
+    this.http.post(this.baseOrderUrl,order)
+      .subscribe((response: string)=> {
+        console.log('Order created with Id: '+response);
+        this.getOrder();
+      },
         catchError(this.handleError)
       );
   }
 
-  completeTask(variables) {
-    console.log('completeTask worked')
-    this.http.put(this.baseFlowableClientUrl,variables)
-      .subscribe(
+  changeClientTaskStatus(taskClaimed: string) {
+    console.log('changeClientStatus worked')
+    this.http.put(this.baseFlowableClientUrl, {username: localStorage.getItem('mainUsername'), taskStatus: taskClaimed})
+      .pipe(
         catchError(this.handleError)
       );
-    this.fetchActiveTask();
   }
 
   getOrder() {
     console.log('getOrder worked')
-    this.http.get(this.baseOrderUrl+this.orderId)
+    this.http.get(this.baseOrderUrl+localStorage.getItem('mainUsername')+'/username')
       .subscribe(
         (order: Order) => {
           ClientService.order = order;
@@ -76,20 +98,24 @@ export class ClientService {
   }
 
   private handleError(error: HttpErrorResponse) {
+
     return throwError('A problem happened, try again.');
   }
 
-  private taskRoute(message: string) {
-    console.log('taskRouteAccessed')
-    switch (message) {
-      case "task_1":
-        this.router.navigate(['/client/order']);
+  private clientRoute(logStatus: string, taskStatus: string) {
+    console.log('clientRoute Accessed')
+    switch (logStatus) {
+      case "not_logged":
+        this.router.navigate(['/client/']);
         break;
-      case "task_2":
-        this.router.navigate(['/client/order-status']);
-        break;
-      case "task_3":
-        this.router.navigate(['/client/feedback']);
+      case "logged":
+        if (taskStatus=="task_1") { //if its in task1
+          this.router.navigate(['/client/order-status']);
+        } else if (taskStatus=="task_2") { //if its in task2
+          this.router.navigate(['/client/feedback']);
+        } else { //if there is no task yet
+          this.router.navigate(['/client/order']);
+        }
         break;
       default:
         this.router.navigate(['/client/']);
@@ -98,12 +124,16 @@ export class ClientService {
   }
 }
 
-export interface LoginCredentials {
+export interface Account {
   username: string;
   password: string;
+  orderId: string;
+  loginStatus: string;
+  taskStatus: string;
 }
 interface Response {
   message: string;
+  messageB: string;
 }
 export interface Order {
   id: string;
@@ -113,4 +143,5 @@ export interface Order {
   status: string ;
   orderTime: string ;
   paid: boolean ;
+  account: Account;
 }

@@ -14,9 +14,11 @@ export class OrderStatusComponent implements OnInit, AfterViewInit {
     private clientService: ClientService) { }
 
   ngOnInit(): void {
+    this.clientService.getOrder();
   }
 
   ngAfterViewInit(): void {
+    this.routeThisPage();
     this.order = ClientService.order;
     this.updateOrder().then();
   }
@@ -29,6 +31,14 @@ export class OrderStatusComponent implements OnInit, AfterViewInit {
         sub.unsubscribe();
       }
     })
+  }
+  onSubmit() { //todo: implement this in html
+    this.clientService.changeClientTaskStatus("task_2")
+    this.routeThisPage();
+  }
+
+  routeThisPage() {
+    this.clientService.routeToCorrectPage("logged","task_1");
 
   }
 }

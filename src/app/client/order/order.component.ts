@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ClientService} from "../client.service";
 
@@ -7,7 +7,7 @@ import {ClientService} from "../client.service";
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
-export class OrderComponent implements OnInit {
+export class OrderComponent implements OnInit, AfterViewInit {
   orderForm: FormGroup;
   pizzaFlavors = [
     "Four cheese","Ham & Cheese","Tuna","Pepperoni","Veggie Pizza","Margherita","Hawaiian Pizza"];
@@ -28,5 +28,15 @@ export class OrderComponent implements OnInit {
 
   onSubmit(order) {
     this.clientService.createOrder(order);
+    this.clientService.changeClientTaskStatus("task_1")
+    this.routeThisPage()
+  }
+
+  ngAfterViewInit(): void {
+    this.routeThisPage();
+  }
+
+  routeThisPage() {
+    this.clientService.routeToCorrectPage("logged","task_0");
   }
 }
