@@ -15,11 +15,9 @@ export class FeedbackComponent implements OnInit, AfterViewInit {
 
   onSubmit() { //todo: implement this in html
     this.clientService.changeClientTaskStatus("task_0")
-    this.clientService.routeToCorrectPage("","");
   }
 
   ngAfterViewInit(): void {
-    this.clientService.routeToCorrectPage("logged","task_2");
   }
 
 }

@@ -27,16 +27,11 @@ export class OrderComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(order) {
-    this.clientService.createOrder(order);
-    this.clientService.changeClientTaskStatus("task_1")
-    this.routeThisPage()
+    this.clientService.createProcess(order);
+    this.clientService.changeClientTaskStatus("task_1");
+    this.clientService.refreshPage();
   }
 
   ngAfterViewInit(): void {
-    this.routeThisPage();
-  }
-
-  routeThisPage() {
-    this.clientService.routeToCorrectPage("logged","task_0");
   }
 }

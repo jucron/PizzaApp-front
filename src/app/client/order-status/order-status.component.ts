@@ -18,7 +18,7 @@ export class OrderStatusComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.routeThisPage();
+    // this.routeThisPage();
     this.order = ClientService.order;
     this.updateOrder().then();
   }
@@ -33,12 +33,7 @@ export class OrderStatusComponent implements OnInit, AfterViewInit {
     })
   }
   onSubmit() { //todo: implement this in html
-    this.clientService.changeClientTaskStatus("task_2")
-    this.routeThisPage();
-  }
-
-  routeThisPage() {
-    this.clientService.routeToCorrectPage("logged","task_1");
-
+    this.clientService.changeClientTaskStatus("task_2");
+    this.clientService.refreshPage();
   }
 }
