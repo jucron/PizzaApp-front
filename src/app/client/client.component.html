@@ -14,7 +14,7 @@
           <a aria-disabled="true" class="nav-link disabled" href="#" tabindex="-1">Logout</a>
         </li>
         <li *ngIf="mainUsername!=null" class="nav-item">
-          <a (click)="onSubmit()" aria-current="page" class="nav-link active" href="#" tabindex="-1">Logout (logged in as {{mainUsername}})</a>
+          <a (click)="onSubmit()" aria-current="page" class="nav-link active" href="/client" tabindex="-1">Logout (logged in as {{mainUsername}})</a>
         </li>
       </ul>
     </div>

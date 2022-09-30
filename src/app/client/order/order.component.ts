@@ -28,8 +28,6 @@ export class OrderComponent implements OnInit, AfterViewInit {
 
   onSubmit(order) {
     this.clientService.createProcess(order);
-    this.clientService.changeClientTaskStatus("task_1");
-    this.clientService.refreshPage();
   }
 
   ngAfterViewInit(): void {

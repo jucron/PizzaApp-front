@@ -7,7 +7,7 @@ import {FeedbackComponent} from './feedback/feedback.component';
 import {ClientComponent} from './client.component';
 import {RouterModule} from "@angular/router";
 import {ClientRoutingModule} from "./client-routing.module";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -22,7 +22,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     CommonModule,
     RouterModule,
     ClientRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class ClientModule {

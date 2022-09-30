@@ -13,9 +13,9 @@ export class AlreadyAuthIn implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let logged = this.clientService.checkLoginStatus();
-    console.log(logged);
+    console.log('user already logged:'+logged);
     if (logged) {
-      return this.router.createUrlTree(['client/order']);
+      return this.router.createUrlTree(['/client/order']);
     } else {
       return true;
     }

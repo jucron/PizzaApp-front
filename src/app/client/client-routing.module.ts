@@ -10,11 +10,10 @@ import {TaskGuard} from "./routerguards/task.guard";
 
 
 const clientRoutes: Routes = [
-  {path: '', component: ClientLoginComponent, canActivate: [AlreadyAuthIn]},
+  {path: '', component: ClientLoginComponent, canActivate: [AlreadyAuthIn], runGuardsAndResolvers: 'always'},
   {path: 'order', component: OrderComponent, canActivate: [NoAuthGuard, TaskGuard]},
   {path: 'order-status', component: OrderStatusComponent, canActivate: [NoAuthGuard, TaskGuard]},
-  {path: 'feedback', component: FeedbackComponent, canActivate: [NoAuthGuard, TaskGuard]},
-  {path: 'refresh', redirectTo: ''}
+  {path: 'feedback', component: FeedbackComponent, canActivate: [NoAuthGuard, TaskGuard]}
 ];
 
 @NgModule({

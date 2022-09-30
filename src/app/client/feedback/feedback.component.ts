@@ -14,7 +14,7 @@ export class FeedbackComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() { //todo: implement this in html
-    this.clientService.changeClientTaskStatus("task_0")
+    this.clientService.changeClientTaskStatusAndRedirect('task_0', '/client/feedback');
   }
 
   ngAfterViewInit(): void {

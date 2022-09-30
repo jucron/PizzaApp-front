@@ -1,13 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, throwError} from "rxjs";
+import {catchError, map, throwError} from "rxjs";
 import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
-  static order: Order;
   baseFlowableClientUrl = 'http://localhost:8081/flowable/client/';
   baseAccountUrl = 'http://localhost:8081/accounts/';
   baseOrderUrl = 'http://localhost:8081/orders/';
@@ -24,11 +23,16 @@ export class ClientService {
             alert("ERROR: account not found")
           } else {
             localStorage.setItem('mainUsername',credentials.username)
+            if (response.message!=null) { //if there is an Order already
+              console.log('An Order already exists for this Account')
+              localStorage.setItem('clientOrderId',response.message);
+            }
+            this.router.navigate(['/client/order']);
           }
           //todo: handle username not found (Security Impl)
         },
         catchError(this.handleError)
-      );
+        );
   }
 
   processLogOUT(username: string) {
@@ -75,37 +79,37 @@ export class ClientService {
     order.account = { username: localStorage.getItem('mainUsername')};
     console.log("Order to be created: "+order)
     this.http.post(this.baseFlowableClientUrl,order)
-      .subscribe(()=> {
-        console.log('Order created');
-        this.getOrder();
+      .subscribe((response: Response)=> {
+        console.log('Order created with id:' + response.message);
+        localStorage.setItem('clientOrderId',response.message)
+        this.changeClientTaskStatusAndRedirect('task_1', '/client/order-status');
+        // this.router.navigate(['/client/order-status']);
       },
         catchError(this.handleError)
       );
   }
 
-  changeClientTaskStatus(taskClaimed: string) {
+  changeClientTaskStatusAndRedirect(taskClaimed: string, url: string) {
     console.log('changeClientStatus worked')
     this.http.put(this.baseFlowableClientUrl, {username: localStorage.getItem('mainUsername'), taskStatus: taskClaimed})
-      .pipe(
+      .subscribe( () => {
+        this.router.navigate([url]);
+      },
         catchError(this.handleError)
       );
   }
 
   getOrder() {
     console.log('getOrder worked')
-    this.http.get(this.baseOrderUrl+localStorage.getItem('mainUsername')+'/username')
-      .subscribe(
+    return this.http.get<Order>(this.baseOrderUrl+localStorage.getItem('clientOrderId'))
+      .pipe(
+        map(
         (order: Order) => {
-          ClientService.order = order;
+          console.log('order found with status: '+order.status)
+          return order;
         },
         catchError(this.handleError)
-      );
-  }
-  async refreshPage() {
-    setTimeout(function() {
-      console.log("refreshPage worked")
-    }, 3000);
-    this.router.navigate(['/client/refresh']);
+      ));
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -129,9 +133,8 @@ export interface Order {
   id: string;
   clientName: string;
   pizzaFlavor: string;
-  address: string ;
-  status: string ;
-  orderTime: string ;
-  paid: boolean ;
-  account: Account;
+  address: string;
+  status: string;
+  orderTime: string;
+  paid: boolean;
 }

@@ -26,8 +26,6 @@ export class ClientLoginComponent implements OnInit, AfterViewInit {
 
   onSubmit(loginCredentials) {
     this.clientService.processLogin(loginCredentials);
-    // this.router.navigate(['/client']);
-    this.clientService.refreshPage();
   }
 
   ngAfterViewInit(): void {
