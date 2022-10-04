@@ -8,6 +8,7 @@ import {ClientComponent} from './client.component';
 import {RouterModule} from "@angular/router";
 import {ClientRoutingModule} from "./client-routing.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ClientActionComponent} from './client-action/client-action.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     OrderComponent,
     OrderStatusComponent,
     FeedbackComponent,
-    ClientComponent
+    ClientComponent,
+    ClientActionComponent
   ],
   imports: [
     CommonModule,

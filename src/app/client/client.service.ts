@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, map, throwError} from "rxjs";
 import {Router} from "@angular/router";
+import {ClientActionComponent} from "./client-action/client-action.component";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,8 @@ export class ClientService {
               console.log('An Order already exists for this Account')
               localStorage.setItem('clientOrderId',response.message);
             }
-            this.router.navigate(['/client/order']);
+            this.checkLoginStatus();
+            this.router.navigate(['/client/client-action'], {skipLocationChange: true});
           }
           //todo: handle username not found (Security Impl)
         },
@@ -63,7 +65,7 @@ export class ClientService {
               localStorage.clear();
               return false;
             } else {
-              localStorage.setItem('clientTask',clientTask);
+              ClientActionComponent.client_task = clientTask;
               return true;
             }
           })
@@ -82,18 +84,18 @@ export class ClientService {
       .subscribe((response: Response)=> {
         console.log('Order created with id:' + response.message);
         localStorage.setItem('clientOrderId',response.message)
-        this.changeClientTaskStatusAndRedirect('task_1', '/client/order-status');
+        this.changeClientTaskStatusAndRedirect('task_1');
         // this.router.navigate(['/client/order-status']);
       },
         catchError(this.handleError)
       );
   }
 
-  changeClientTaskStatusAndRedirect(taskClaimed: string, url: string) {
+  changeClientTaskStatusAndRedirect(taskClaimed: string) {
     console.log('changeClientStatus worked')
     this.http.put(this.baseFlowableClientUrl, {username: localStorage.getItem('mainUsername'), taskStatus: taskClaimed})
       .subscribe( () => {
-        this.router.navigate([url]);
+        this.router.navigate(['/client'], {skipLocationChange: true});
       },
         catchError(this.handleError)
       );

@@ -9,6 +9,8 @@ import {interval} from "rxjs";
 })
 export class OrderStatusComponent implements OnInit, AfterViewInit {
   order: Order;
+  statusCode = ['confirmed','accepted','baking','pizzaReady','delivering','pizzaDelivered','finished'];
+  statusView = ['Confirmed','Accepted','Baking','Pizza Ready','Delivering','Delivered','Finished'];
 
   constructor(
     private clientService: ClientService) { }
@@ -43,7 +45,11 @@ export class OrderStatusComponent implements OnInit, AfterViewInit {
       });
 }
 
-  onSubmit() { //todo: implement this in html
-    this.clientService.changeClientTaskStatusAndRedirect('task_2', '/client/feedback');
+  closeTask() {
+    this.clientService.changeClientTaskStatusAndRedirect('task_2');
+  }
+
+  forwardStatus() {
+    this.order.status=this.statusCode[this.statusCode.indexOf(this.order.status)+1]
   }
 }

@@ -38,13 +38,15 @@
 
           <!--          row 4x4x4-->
           <div class="row">
-            <div class="col-md-4"></div>
+            <div class="col-md-2"></div>
             <div class="col-md-4">
               <button [disabled]="!orderForm.valid" class="w-100 btn btn-lg btn-primary" type="submit">Order</button>
             </div>
-            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <button [routerLink]="['/client']" class="w-100 btn btn-lg btn-secondary" skipLocationChange="true" >Back</button>
+            </div>
+            <div class="col-md-2"></div>
           </div>
-          <p class="mt-5 mb-3 text-muted">&copy; 2022</p>
         </form>
       </main>
     </div>

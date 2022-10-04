@@ -6,14 +6,15 @@ import {OrderStatusComponent} from "./order-status/order-status.component";
 import {FeedbackComponent} from "./feedback/feedback.component";
 import {AlreadyAuthIn} from "./routerguards/already-auth.guard";
 import {NoAuthGuard} from "./routerguards/no-auth.guard";
-import {TaskGuard} from "./routerguards/task.guard";
+import {ClientActionComponent} from "./client-action/client-action.component";
 
 
 const clientRoutes: Routes = [
-  {path: '', component: ClientLoginComponent, canActivate: [AlreadyAuthIn], runGuardsAndResolvers: 'always'},
-  {path: 'order', component: OrderComponent, canActivate: [NoAuthGuard, TaskGuard]},
-  {path: 'order-status', component: OrderStatusComponent, canActivate: [NoAuthGuard, TaskGuard]},
-  {path: 'feedback', component: FeedbackComponent, canActivate: [NoAuthGuard, TaskGuard]}
+  {path: '', component: ClientLoginComponent, canActivate: [AlreadyAuthIn]},
+  {path: 'client-action', component: ClientActionComponent, canActivate: [NoAuthGuard]},
+  {path: 'order', component: OrderComponent, canActivate: [NoAuthGuard]},
+  {path: 'order-status', component: OrderStatusComponent, canActivate: [NoAuthGuard]},
+  {path: 'feedback', component: FeedbackComponent, canActivate: [NoAuthGuard]}
 ];
 
 @NgModule({

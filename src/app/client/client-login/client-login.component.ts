@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ClientService} from "../client.service";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-client-login',
@@ -13,8 +12,7 @@ export class ClientLoginComponent implements OnInit, AfterViewInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private clientService: ClientService,
-    private router: Router
+    private clientService: ClientService
   ) { }
 
   ngOnInit(): void {

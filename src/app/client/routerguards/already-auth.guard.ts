@@ -15,7 +15,7 @@ export class AlreadyAuthIn implements CanActivate {
     let logged = this.clientService.checkLoginStatus();
     console.log('user already logged:'+logged);
     if (logged) {
-      return this.router.createUrlTree(['/client/order']);
+      return this.router.navigate(['/client/client-action'], {skipLocationChange: true});
     } else {
       return true;
     }
