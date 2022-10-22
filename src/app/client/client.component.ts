@@ -15,6 +15,6 @@ export class ClientComponent implements OnInit {
   }
 
   onSubmit() {
-    this.clientService.processLogOUT(this.mainUsername)
+    this.clientService.executeLogOUT(this.mainUsername)
   }
 }

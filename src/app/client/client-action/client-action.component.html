@@ -18,10 +18,11 @@
                 <h4 class="my-0 fw-normal">Order</h4>
               </div>
               <div class="card-body">
-                <small class="text-muted fw-light">Here you can put details of your Order and start the process</small>
+                <small class="text-muted fw-light">Here you can put details of your Order and start your process</small>
                 <p></p>
-                <button [disabled]="getClientTask()!='task_0'" [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
+                <button [disabled]="getClientTask()=='endFollowUp' || getClientTask()=='sendFeedback'" [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
                 >Order now!</button>
+<!--                todo: onclick creates process -->
               </div>
             </div>
           </div>
@@ -33,7 +34,7 @@
               <div class="card-body">
                 <small class="text-muted fw-light">Here you can follow your Order Status and stop being so anxious!</small>
                 <p></p>
-                <button [disabled]="getClientTask()!='task_1'" [routerLink]="['/client/order-status']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
+                <button [disabled]="getClientTask()!='endFollowUp'" [routerLink]="['/client/order-status']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
                 >Check Status!</button>
               </div>
             </div>
@@ -46,7 +47,7 @@
               <div class="card-body">
                 <small class="text-muted fw-light">The final stage: give us your feedback about the whole service</small>
                 <p></p>
-                <button [disabled]="getClientTask()!='task_2'" [routerLink]="['/client/feedback']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
+                <button [disabled]="getClientTask()!='sendFeedback'" [routerLink]="['/client/feedback']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
                 >Give feedback</button>
               </div>
             </div>

@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, map, throwError} from "rxjs";
 import {Router} from "@angular/router";
-import {ClientActionComponent} from "./client-action/client-action.component";
 
 @Injectable({
   providedIn: 'root'
@@ -10,34 +9,30 @@ import {ClientActionComponent} from "./client-action/client-action.component";
 export class ClientService {
   baseFlowableClientUrl = 'http://localhost:8081/flowable/client/';
   baseAccountUrl = 'http://localhost:8081/accounts/';
-  baseOrderUrl = 'http://localhost:8081/orders/';
+  // baseOrderUrl = 'http://localhost:8081/orders/';
 
   constructor(private http: HttpClient,
               private router: Router) { }
 
-  processLogin(credentials: Account) {
+  executeLogin(credentials: Account) {
     console.log('login worked')
     this.http.post(this.baseAccountUrl+'login', credentials)
       .subscribe(
         (response: Response) => {
           if (response==null) {
             alert("ERROR: account not found")
+            //todo: handle username/password not correct (Security Impl)
           } else {
             localStorage.setItem('mainUsername',credentials.username)
-            if (response.message!=null) { //if there is an Order already
-              console.log('An Order already exists for this Account')
-              localStorage.setItem('clientOrderId',response.message);
-            }
-            this.checkLoginStatus();
+            this.updateClientTask();
             this.router.navigate(['/client/client-action'], {skipLocationChange: true});
           }
-          //todo: handle username not found (Security Impl)
         },
         catchError(this.handleError)
         );
   }
 
-  processLogOUT(username: string) {
+  executeLogOUT(username: string) {
     console.log('logOUT worked')
     this.http.post(this.baseAccountUrl+'logout', {username: username})
       .subscribe(
@@ -54,20 +49,13 @@ export class ClientService {
       console.log('not logged in Angular')
       return false;
     } else {
-      console.log('already logged in Angular')
-      return this.http.get<Response>(this.baseFlowableClientUrl+localStorage.getItem('mainUsername'))
+      console.log('already logged in Angular, checking if backend is logged')
+      return this.http.get<Response>(this.baseAccountUrl+localStorage.getItem('mainUsername')+"/checkLogin")
         .subscribe(
           (response: Response) => {
             let loginStatus = response.message;
-            let clientTask = response.messageB;
-            console.log(loginStatus+" "+clientTask)
-            if (loginStatus == 'not_logged') {
-              localStorage.clear();
-              return false;
-            } else {
-              ClientActionComponent.client_task = clientTask;
-              return true;
-            }
+            console.log("LoginStatus from backend: "+loginStatus)
+            return loginStatus == 'logged';
           })
       }
   }
@@ -76,16 +64,27 @@ export class ClientService {
     return localStorage.getItem('clientTask');
   }
 
+  updateClientTask() {
+    this.http.get<Response>(this.baseFlowableClientUrl+localStorage.getItem('mainUser')+'/taskId')
+      .pipe(
+        map(
+          (response: Response) => {
+            console.log('taskId found: '+response.message)
+            localStorage.setItem('clientTask', response.message);
+          },
+          catchError(this.handleError)
+        ));
+  }
+
   createProcess(order) {
     console.log('createProcess worked')
-    order.account = { username: localStorage.getItem('mainUsername')};
+    // order.account = { username: localStorage.getItem('mainUsername')};
     console.log("Order to be created: "+order)
-    this.http.post(this.baseFlowableClientUrl,order)
+    this.http.post(this.baseFlowableClientUrl+localStorage.getItem('mainUsername'),order)
       .subscribe((response: Response)=> {
         console.log('Order created with id:' + response.message);
         localStorage.setItem('clientOrderId',response.message)
         this.changeClientTaskStatusAndRedirect('task_1');
-        // this.router.navigate(['/client/order-status']);
       },
         catchError(this.handleError)
       );
@@ -103,7 +102,7 @@ export class ClientService {
 
   getOrder() {
     console.log('getOrder worked')
-    return this.http.get<Order>(this.baseOrderUrl+localStorage.getItem('clientOrderId'))
+    return this.http.get<Order>(this.baseFlowableClientUrl+localStorage.getItem('mainUser')+'/order')
       .pipe(
         map(
         (order: Order) => {

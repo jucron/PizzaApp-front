@@ -23,7 +23,7 @@ export class ClientLoginComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(loginCredentials) {
-    this.clientService.processLogin(loginCredentials);
+    this.clientService.executeLogin(loginCredentials);
   }
 
   ngAfterViewInit(): void {
