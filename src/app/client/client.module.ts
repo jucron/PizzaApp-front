@@ -9,6 +9,11 @@ import {RouterModule} from "@angular/router";
 import {ClientRoutingModule} from "./client-routing.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ClientActionComponent} from './client-action/client-action.component';
+import {
+  BottomSheetStartProcessComponent
+} from './client-action/bottom-sheet-startprocess/bottom-sheet-start-process.component';
+import {MatListModule} from "@angular/material/list";
+import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
 
 
 @NgModule({
@@ -18,15 +23,19 @@ import {ClientActionComponent} from './client-action/client-action.component';
     OrderStatusComponent,
     FeedbackComponent,
     ClientComponent,
-    ClientActionComponent
+    ClientActionComponent,
+    BottomSheetStartProcessComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     ClientRoutingModule,
     ReactiveFormsModule,
-    FormsModule
-  ]
+    FormsModule,
+    MatListModule,
+    MatBottomSheetModule
+  ],
+  entryComponents: [BottomSheetStartProcessComponent]
 })
 export class ClientModule {
 

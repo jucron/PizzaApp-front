@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ClientService} from "../client.service";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
+import {BottomSheetStartProcessComponent} from "./bottom-sheet-startprocess/bottom-sheet-start-process.component";
 
 @Component({
   selector: 'app-client-action',
@@ -9,16 +10,20 @@ import {ClientService} from "../client.service";
 export class ClientActionComponent implements OnInit, AfterViewInit {
   static client_task;
 
-  constructor(private clientService: ClientService) { }
+  constructor(private bottomSheet: MatBottomSheet) { }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
-
   }
 
   getClientTask() {
     return ClientActionComponent.client_task;
   }
+
+  openBottomSheet(): void {
+    this.bottomSheet.open(BottomSheetStartProcessComponent);
+  }
 }
+

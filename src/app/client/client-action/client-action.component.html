@@ -8,7 +8,8 @@
     <div class="col-md-4">
       <main>
         <h2 class="display-4 fw-normal">Actions Panel </h2>
-        <p class="fs-5 text-muted">We are very happy to have you as customer! Please choose your next action in the menu below.</p>
+        <p class="fs-5 text-muted">We are very happy to have you as customer! Please choose your next action in the menu
+          below.</p>
         <p></p>
 
         <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
@@ -18,11 +19,16 @@
                 <h4 class="my-0 fw-normal">Order</h4>
               </div>
               <div class="card-body">
-                <small class="text-muted fw-light">Here you can put details of your Order and start your process</small>
+                <small class="text-muted fw-light">Here you can start your Order or continue where you left it. </small>
                 <p></p>
-                <button [disabled]="getClientTask()=='endFollowUp' || getClientTask()=='sendFeedback'" [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
-                >Order now!</button>
-<!--                todo: onclick creates process -->
+                <button (click)="openBottomSheet()" *ngIf="getClientTask()==null; else processStarted"
+                        class="w-120 btn btn-lg btn-info" type="button">Start your process</button>
+
+                <ng-template #processStarted>
+                  <button [disabled]="getClientTask()=='endFollowUp' || getClientTask()=='sendFeedback'"
+                          [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange="true"
+                          type="button">Continue your process</button>
+                </ng-template>
               </div>
             </div>
           </div>
@@ -32,10 +38,13 @@
                 <h4 class="my-0 fw-normal">Status</h4>
               </div>
               <div class="card-body">
-                <small class="text-muted fw-light">Here you can follow your Order Status and stop being so anxious!</small>
+                <small class="text-muted fw-light">Here you can follow your Order Status and stop being so
+                  anxious!</small>
                 <p></p>
-                <button [disabled]="getClientTask()!='endFollowUp'" [routerLink]="['/client/order-status']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
-                >Check Status!</button>
+                <button [disabled]="getClientTask()!='endFollowUp'" [routerLink]="['/client/order-status']"
+                        class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
+                >Check Status!
+                </button>
               </div>
             </div>
           </div>
@@ -45,10 +54,13 @@
                 <h4 class="my-0 fw-normal">Feedback</h4>
               </div>
               <div class="card-body">
-                <small class="text-muted fw-light">The final stage: give us your feedback about the whole service</small>
+                <small class="text-muted fw-light">The final stage: give us your feedback about the whole
+                  service</small>
                 <p></p>
-                <button [disabled]="getClientTask()!='sendFeedback'" [routerLink]="['/client/feedback']" class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
-                >Give feedback</button>
+                <button [disabled]="getClientTask()!='sendFeedback'" [routerLink]="['/client/feedback']"
+                        class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
+                >Give feedback
+                </button>
               </div>
             </div>
           </div>

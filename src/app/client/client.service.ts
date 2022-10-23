@@ -7,9 +7,8 @@ import {Router} from "@angular/router";
   providedIn: 'root'
 })
 export class ClientService {
-  baseFlowableClientUrl = 'http://localhost:8081/flowable/client/';
+  baseFlowableClientUrl = 'http://localhost:8081/process/client/';
   baseAccountUrl = 'http://localhost:8081/accounts/';
-  // baseOrderUrl = 'http://localhost:8081/orders/';
 
   constructor(private http: HttpClient,
               private router: Router) { }
@@ -24,7 +23,8 @@ export class ClientService {
             //todo: handle username/password not correct (Security Impl)
           } else {
             localStorage.setItem('mainUsername',credentials.username)
-            this.updateClientTask();
+            localStorage.setItem('clientTask',response.message)
+            // this.updateClientTask();
             this.router.navigate(['/client/client-action'], {skipLocationChange: true});
           }
         },
@@ -55,7 +55,11 @@ export class ClientService {
           (response: Response) => {
             let loginStatus = response.message;
             console.log("LoginStatus from backend: "+loginStatus)
-            return loginStatus == 'logged';
+            if (loginStatus == 'not_logged') {
+              localStorage.clear();
+              return false;
+            }
+            return true;
           })
       }
   }
