@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {MatBottomSheet} from "@angular/material/bottom-sheet";
-import {BottomSheetStartProcessComponent} from "./bottom-sheet-startprocess/bottom-sheet-start-process.component";
+import {MatDialog} from "@angular/material/dialog";
+import {DialogStartProcessComponent} from "./dialog-startprocess/dialog-start-process.component";
+import {ClientService} from "../client.service";
 
 @Component({
   selector: 'app-client-action',
@@ -8,22 +9,27 @@ import {BottomSheetStartProcessComponent} from "./bottom-sheet-startprocess/bott
   styleUrls: ['./client-action.component.scss']
 })
 export class ClientActionComponent implements OnInit, AfterViewInit {
-  static client_task;
+  client_task = this.clientService.getClientTask();
 
-  constructor(private bottomSheet: MatBottomSheet) { }
+  constructor(public dialog: MatDialog,
+              private clientService: ClientService) { }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
+    this.clientService.updateClientTask();
+    this.client_task = this.clientService.getClientTask();
+    console.log('client_task is: '+this.client_task);
   }
 
-  getClientTask() {
-    return ClientActionComponent.client_task;
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(DialogStartProcessComponent, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 
-  openBottomSheet(): void {
-    this.bottomSheet.open(BottomSheetStartProcessComponent);
-  }
 }
 

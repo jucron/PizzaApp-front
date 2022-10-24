@@ -9,11 +9,8 @@ import {RouterModule} from "@angular/router";
 import {ClientRoutingModule} from "./client-routing.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ClientActionComponent} from './client-action/client-action.component';
-import {
-  BottomSheetStartProcessComponent
-} from './client-action/bottom-sheet-startprocess/bottom-sheet-start-process.component';
-import {MatListModule} from "@angular/material/list";
-import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
+import {DialogStartProcessComponent} from './client-action/dialog-startprocess/dialog-start-process.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -24,7 +21,7 @@ import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
     FeedbackComponent,
     ClientComponent,
     ClientActionComponent,
-    BottomSheetStartProcessComponent
+    DialogStartProcessComponent
   ],
   imports: [
     CommonModule,
@@ -32,10 +29,9 @@ import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
     ClientRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    MatListModule,
-    MatBottomSheetModule
+    MatDialogModule
   ],
-  entryComponents: [BottomSheetStartProcessComponent]
+  entryComponents: [DialogStartProcessComponent]
 })
 export class ClientModule {
 

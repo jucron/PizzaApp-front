@@ -14,8 +14,10 @@ export class NoAuthGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let loggedData = this.clientService.checkLoginStatus();
     if (loggedData) {
+      console.log('NoAuthGuard: User logged')
       return true;
     } else {
+      console.log('NoAuthGuard: User logged, redirecting page')
       return this.router.createUrlTree([''])
     }
   }

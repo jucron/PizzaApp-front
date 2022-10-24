@@ -7,8 +7,9 @@ import {Router} from "@angular/router";
   providedIn: 'root'
 })
 export class ClientService {
-  baseFlowableClientUrl = 'http://localhost:8081/process/client/';
-  baseAccountUrl = 'http://localhost:8081/accounts/';
+  private baseFlowableClientUrl = 'http://localhost:8081/process/client/';
+  private baseAccountUrl = 'http://localhost:8081/accounts/';
+  private caseKey = 'OrderPizzaCase';
 
   constructor(private http: HttpClient,
               private router: Router) { }
@@ -80,6 +81,17 @@ export class ClientService {
         ));
   }
 
+  startProcess() {
+    console.log('startProcess worked');
+    // @ts-ignore
+    this.http.post(this.baseFlowableClientUrl+this.caseKey+'/'+localStorage.getItem('mainUsername'))
+      .subscribe(()=> {
+          this.router.navigate(['/client/order'], {skipLocationChange: true});
+        },
+        catchError(this.handleError)
+      );
+  }
+
   createProcess(order) {
     console.log('createProcess worked')
     // order.account = { username: localStorage.getItem('mainUsername')};
@@ -121,6 +133,8 @@ export class ClientService {
 
     return throwError('A problem happened, try again.');
   }
+
+
 }
 
 export interface Account {

@@ -13,10 +13,11 @@ export class AlreadyAuthIn implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let logged = this.clientService.checkLoginStatus();
-    console.log('user already logged:'+logged);
     if (logged) {
+      console.log('AlreadyAuthGuard: user already logged, redirecting to client-action page');
       return this.router.navigate(['/client/client-action'], {skipLocationChange: true});
     } else {
+      console.log('AlreadyAuthGuard: user not logged');
       return true;
     }
   }

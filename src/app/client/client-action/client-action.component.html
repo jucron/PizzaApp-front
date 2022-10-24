@@ -21,11 +21,11 @@
               <div class="card-body">
                 <small class="text-muted fw-light">Here you can start your Order or continue where you left it. </small>
                 <p></p>
-                <button (click)="openBottomSheet()" *ngIf="getClientTask()==null; else processStarted"
+                <button (click)="openDialog('1000ms', '1000ms')" *ngIf="client_task == 'null'; else processStarted"
                         class="w-120 btn btn-lg btn-info" type="button">Start your process</button>
 
                 <ng-template #processStarted>
-                  <button [disabled]="getClientTask()=='endFollowUp' || getClientTask()=='sendFeedback'"
+                  <button [disabled]="client_task=='endFollowUp' || client_task=='sendFeedback'"
                           [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange="true"
                           type="button">Continue your process</button>
                 </ng-template>
@@ -41,7 +41,7 @@
                 <small class="text-muted fw-light">Here you can follow your Order Status and stop being so
                   anxious!</small>
                 <p></p>
-                <button [disabled]="getClientTask()!='endFollowUp'" [routerLink]="['/client/order-status']"
+                <button [disabled]="client_task!='endFollowUp'" [routerLink]="['/client/order-status']"
                         class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
                 >Check Status!
                 </button>
@@ -57,7 +57,7 @@
                 <small class="text-muted fw-light">The final stage: give us your feedback about the whole
                   service</small>
                 <p></p>
-                <button [disabled]="getClientTask()!='sendFeedback'" [routerLink]="['/client/feedback']"
+                <button [disabled]="client_task!='sendFeedback'" [routerLink]="['/client/feedback']"
                         class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
                 >Give feedback
                 </button>
