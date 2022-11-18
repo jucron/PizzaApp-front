@@ -9,13 +9,13 @@ import {Router} from "@angular/router";
 export class ClientService {
   private baseFlowableClientUrl = 'http://localhost:8081/process/client/';
   private baseAccountUrl = 'http://localhost:8081/accounts/';
-  private caseKey = 'OrderPizzaCase';
+  private caseKey = 'pizzaOrderCase';
 
   constructor(private http: HttpClient,
               private router: Router) { }
 
   executeLogin(credentials: Account) {
-    console.log('login worked')
+    console.log('executeLogin worked')
     this.http.post(this.baseAccountUrl+'login', credentials)
       .subscribe(
         (response: Response) => {
@@ -44,25 +44,21 @@ export class ClientService {
       );
   }
 
-  checkLoginStatus() {
-    console.log('checkLoginStatus worked');
-    if (localStorage.getItem('mainUsername')==null) {
-      console.log('not logged in Angular')
-      return false;
-    } else {
-      console.log('already logged in Angular, checking if backend is logged')
-      return this.http.get<Response>(this.baseAccountUrl+localStorage.getItem('mainUsername')+"/checkLogin")
-        .subscribe(
-          (response: Response) => {
-            let loginStatus = response.message;
-            console.log("LoginStatus from backend: "+loginStatus)
-            if (loginStatus == 'not_logged') {
-              localStorage.clear();
-              return false;
-            }
+  async isUserLogged() {
+    console.log('isUserLogged: worked');
+    return this.http.get<Response>(this.baseAccountUrl + localStorage.getItem('mainUsername') + "/checkLogin")
+      .subscribe(
+        (response: Response) => {
+          let loginStatus = response.message;
+          console.log("isUserLogged: LoginStatus from backend: " + loginStatus)
+          if (loginStatus == 'not_logged') {
+            localStorage.clear();
+            return false;
+          } else {
+            // return this.router.navigate(['/client/client-action'], {skipLocationChange: true});
             return true;
-          })
-      }
+          }
+        });
   }
 
   getClientTask() {
@@ -74,7 +70,7 @@ export class ClientService {
       .pipe(
         map(
           (response: Response) => {
-            console.log('taskId found: '+response.message)
+            console.log('updateClientTask: taskId found: '+response.message)
             localStorage.setItem('clientTask', response.message);
           },
           catchError(this.handleError)

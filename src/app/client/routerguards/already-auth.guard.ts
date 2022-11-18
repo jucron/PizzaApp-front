@@ -12,13 +12,47 @@ export class AlreadyAuthIn implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    let logged = this.clientService.checkLoginStatus();
-    if (logged) {
+
+    if (localStorage.getItem('mainUsername') == null) {
+      console.log('AlreadyAuthGuard: not logged in Angular, remaining in page')
+      return true;
+    }
+    let logged = this.clientService.isUserLogged();
+
+    // const response = async () => {
+    //   await this.clientService.isUserLogged()
+    //     .then(r => logged = r);
+    // };
+    // return this.clientService.isUserLogged()
+    //   .subscribe(
+    //     (response: Response) => {
+    //       let loginStatus = response.message;
+    //       console.log("isUserLogged: LoginStatus from backend: " + loginStatus)
+    //       if (loginStatus == 'not_logged') {
+    //         localStorage.clear();
+    //         console.log('AlreadyAuthGuard: user not logged, remaining in page');
+    //         return true;
+    //       } else {
+    //         console.log('AlreadyAuthGuard: user already logged, redirecting to client-action page');
+    //         return this.router.navigate(['/client/client-action'], {skipLocationChange: true});
+    //       }
+    //     });
+
+    // setTimeout(() => {
+    //     console.log('AlreadyAuthGuard: checkLoginStatus is '+typeof logged+', waiting 1,5 seconds')
+    // }, 2000);
+    //
+    console.log('AlreadyAuthGuard: logged is '+ logged)
+    if (logged == true) {
       console.log('AlreadyAuthGuard: user already logged, redirecting to client-action page');
       return this.router.navigate(['/client/client-action'], {skipLocationChange: true});
     } else {
-      console.log('AlreadyAuthGuard: user not logged');
+      console.log('AlreadyAuthGuard: user not logged, remaining in page');
       return true;
     }
   }
+}
+interface Response {
+  message: string;
+  messageB: string;
 }
