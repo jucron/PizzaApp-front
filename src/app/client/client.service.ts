@@ -44,21 +44,9 @@ export class ClientService {
       );
   }
 
-  async isUserLogged() {
+  isUserLogged() {
     console.log('isUserLogged: worked');
-    return this.http.get<Response>(this.baseAccountUrl + localStorage.getItem('mainUsername') + "/checkLogin")
-      .subscribe(
-        (response: Response) => {
-          let loginStatus = response.message;
-          console.log("isUserLogged: LoginStatus from backend: " + loginStatus)
-          if (loginStatus == 'not_logged') {
-            localStorage.clear();
-            return false;
-          } else {
-            // return this.router.navigate(['/client/client-action'], {skipLocationChange: true});
-            return true;
-          }
-        });
+    return this.http.get<Response>(this.baseAccountUrl + localStorage.getItem('mainUsername') + "/checkLogin");
   }
 
   getClientTask() {
