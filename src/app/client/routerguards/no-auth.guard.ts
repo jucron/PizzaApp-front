@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {ClientService} from "../client.service";
 
 @Injectable({
@@ -12,13 +12,30 @@ export class NoAuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    let logged = this.clientService.isUserLogged();
-    if (logged) {
-      console.log('NoAuthGuard: User logged')
-      return true;
-    } else {
-      console.log('NoAuthGuard: User logged, redirecting page')
+
+    if (localStorage.getItem('mainUsername') == null) {
+      console.log('NoAuthGuard: not logged in Angular, redirecting to Login Page')
       return this.router.createUrlTree([''])
-    }
+    };
+
+    return this.clientService.isUserLogged()
+      .pipe(
+        map(
+        (response: Response) => {
+          let loginStatus = response.message;
+          if (loginStatus == 'not_logged') {
+            localStorage.clear();
+            console.log('NoAuthGuard: user not logged in server, clearing localStorage and redirecting');
+            return this.router.createUrlTree([''])
+          } else {
+            console.log('NoAuthGuard: user logged in both points, staying in this page');
+            return true;
+          }
+        }
+      ));
   }
+}
+interface Response {
+  message: string;
+  messageB: string;
 }

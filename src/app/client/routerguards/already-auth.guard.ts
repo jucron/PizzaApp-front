@@ -17,7 +17,6 @@ export class AlreadyAuthIn implements CanActivate {
       console.log('AlreadyAuthGuard: not logged in Angular, remaining in page')
       return true;
     }
-    console.log('AlreadyAuthGuard: already logged in Angular, checking the backend status')
     return this.clientService.isUserLogged()
       .pipe(
         map(
@@ -25,10 +24,10 @@ export class AlreadyAuthIn implements CanActivate {
             let loginStatus = response.message;
             if (loginStatus == 'not_logged') {
               localStorage.clear();
-              console.log('AlreadyAuthGuard: user not logged, remaining in page');
+              console.log('AlreadyAuthGuard: Angular: logged | Server: not_logged. Remaining in page.');
               return true;
             } else {
-              console.log('AlreadyAuthGuard: user already logged, redirecting to client-action page');
+              console.log('AlreadyAuthGuard: Angular: logged | Server: logged. Redirecting to client-action page');
               this.router.navigate(['/client/client-action'], {skipLocationChange: true});
               return false;
             }
