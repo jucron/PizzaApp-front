@@ -19,7 +19,6 @@ export class ClientActionComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.clientService.updateClientTask();
-    this.client_task = this.clientService.getClientTask();
     console.log('client_task is: '+this.client_task);
   }
 

@@ -14,6 +14,14 @@ export class ClientService {
   constructor(private http: HttpClient,
               private router: Router) { }
 
+  getClientTask() {
+    return localStorage.getItem('clientTask');
+  }
+
+  getMainUsername() {
+    return localStorage.getItem('mainUsername');
+  }
+
   executeLogin(credentials: Account) {
     console.log('executeLogin worked')
     this.http.post(this.baseAccountUrl+'login', credentials)
@@ -46,15 +54,12 @@ export class ClientService {
 
   isUserLogged() {
     console.log('isUserLogged: worked');
-    return this.http.get<Response>(this.baseAccountUrl + localStorage.getItem('mainUsername') + "/checkLogin");
-  }
-
-  getClientTask() {
-    return localStorage.getItem('clientTask');
+    return this.http.get<Response>(this.baseAccountUrl + this.getMainUsername() + "/checkLogin");
   }
 
   updateClientTask() {
-    this.http.get<Response>(this.baseFlowableClientUrl+localStorage.getItem('mainUser')+'/taskId')
+    console.log('updateClientTask worked ')
+    this.http.get<Response>(this.baseFlowableClientUrl+this.getMainUsername()+'/taskId')
       .pipe(
         map(
           (response: Response) => {
@@ -68,9 +73,9 @@ export class ClientService {
   startProcess() {
     console.log('startProcess worked');
     // @ts-ignore
-    this.http.post(this.baseFlowableClientUrl+this.caseKey+'/'+localStorage.getItem('mainUsername'))
+    this.http.post(this.baseFlowableClientUrl+this.caseKey+'/'+this.getMainUsername())
       .subscribe(()=> {
-          this.router.navigate(['/client/order'], {skipLocationChange: true});
+          this.router.navigate([''], {skipLocationChange: true});
         },
         catchError(this.handleError)
       );
@@ -80,7 +85,7 @@ export class ClientService {
     console.log('createProcess worked')
     // order.account = { username: localStorage.getItem('mainUsername')};
     console.log("Order to be created: "+order)
-    this.http.post(this.baseFlowableClientUrl+localStorage.getItem('mainUsername'),order)
+    this.http.post(this.baseFlowableClientUrl+this.getMainUsername(),order)
       .subscribe((response: Response)=> {
         console.log('Order created with id:' + response.message);
         localStorage.setItem('clientOrderId',response.message)
@@ -92,7 +97,7 @@ export class ClientService {
 
   changeClientTaskStatusAndRedirect(taskClaimed: string) {
     console.log('changeClientStatus worked')
-    this.http.put(this.baseFlowableClientUrl, {username: localStorage.getItem('mainUsername'), taskStatus: taskClaimed})
+    this.http.put(this.baseFlowableClientUrl, {username: this.getMainUsername(), taskStatus: taskClaimed})
       .subscribe( () => {
         this.router.navigate(['/client'], {skipLocationChange: true});
       },
@@ -102,7 +107,7 @@ export class ClientService {
 
   getOrder() {
     console.log('getOrder worked')
-    return this.http.get<Order>(this.baseFlowableClientUrl+localStorage.getItem('mainUser')+'/order')
+    return this.http.get<Order>(this.baseFlowableClientUrl+this.getMainUsername()+'/order')
       .pipe(
         map(
         (order: Order) => {
