@@ -10,16 +10,18 @@ export class ClientService {
   private baseFlowableClientUrl = 'http://localhost:8081/process/client/';
   private baseAccountUrl = 'http://localhost:8081/accounts/';
   private caseKey = 'pizzaOrderCase';
+  private clientTask_key = 'clientTask';
+  private mainUsername_key = 'mainUsername';
 
   constructor(private http: HttpClient,
               private router: Router) { }
 
   getClientTask() {
-    return localStorage.getItem('clientTask');
+    return localStorage.getItem(this.clientTask_key);
   }
 
   getMainUsername() {
-    return localStorage.getItem('mainUsername');
+    return localStorage.getItem(this.mainUsername_key);
   }
 
   executeLogin(credentials: Account) {
@@ -31,9 +33,7 @@ export class ClientService {
             alert("ERROR: account not found")
             //todo: handle username/password not correct (Security Impl)
           } else {
-            localStorage.setItem('mainUsername',credentials.username)
-            localStorage.setItem('clientTask',response.message)
-            // this.updateClientTask();
+            localStorage.setItem(this.mainUsername_key,credentials.username)
             this.router.navigate(['/client/client-action'], {skipLocationChange: true});
           }
         },
@@ -59,15 +59,18 @@ export class ClientService {
 
   updateClientTask() {
     console.log('updateClientTask worked ')
-    this.http.get<Response>(this.baseFlowableClientUrl+this.getMainUsername()+'/taskId')
+    return this.http.get<Response>(this.baseFlowableClientUrl+this.getMainUsername()+'/taskDef')
       .pipe(
         map(
           (response: Response) => {
-            console.log('updateClientTask: taskId found: '+response.message)
-            localStorage.setItem('clientTask', response.message);
+            return response.message;
           },
           catchError(this.handleError)
-        ));
+        ))
+      .subscribe(message => {
+        console.log('updateClientTask: taskDef found: '+message)
+        localStorage.setItem(this.clientTask_key, message);
+      });
   }
 
   startProcess() {
@@ -75,7 +78,7 @@ export class ClientService {
     // @ts-ignore
     this.http.post(this.baseFlowableClientUrl+this.caseKey+'/'+this.getMainUsername())
       .subscribe(()=> {
-          this.router.navigate([''], {skipLocationChange: true});
+          this.router.navigate(['/client'], {skipLocationChange: true});
         },
         catchError(this.handleError)
       );
@@ -135,7 +138,6 @@ export interface Account {
 }
 interface Response {
   message: string;
-  messageB: string;
 }
 export interface Order {
   id: string;

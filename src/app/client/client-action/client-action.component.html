@@ -20,10 +20,10 @@
               <div class="card-body">
                 <small class="text-muted fw-light">Here you can start your Order or continue where you left it. </small>
                 <p></p>
-                <button (click)="openDialog('1000ms', '1000ms')" *ngIf="client_task == 'null'; else processStarted"
+                <button (click)="openDialog('1000ms', '1000ms')" *ngIf="client_task == 'no_task'; else processStarted"
                         class="w-120 btn btn-lg btn-info" type="button">Start your process</button>
                 <ng-template #processStarted>
-                  <button [disabled]="client_task=='endFollowUp' || client_task=='sendFeedback'"
+                  <button [disabled]="client_task!='executeOrder'"
                           [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange="true"
                           type="button">Continue your process</button>
                 </ng-template>

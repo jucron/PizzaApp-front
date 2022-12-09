@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterContentInit, Component, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {DialogStartProcessComponent} from "./dialog-startprocess/dialog-start-process.component";
 import {ClientService} from "../client.service";
@@ -8,8 +8,8 @@ import {ClientService} from "../client.service";
   templateUrl: './client-action.component.html',
   styleUrls: ['./client-action.component.scss']
 })
-export class ClientActionComponent implements OnInit, AfterViewInit {
-  client_task = this.clientService.getClientTask();
+export class ClientActionComponent implements OnInit, AfterContentInit {
+  client_task: string;
 
   constructor(public dialog: MatDialog,
               private clientService: ClientService) { }
@@ -17,8 +17,10 @@ export class ClientActionComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void {
-    this.clientService.updateClientTask();
+  ngAfterContentInit(): void {
+    //todo: BUG for async response of this variable
+    this.clientService.updateClientTask()
+    this.client_task = this.clientService.getClientTask();
     console.log('client_task is: '+this.client_task);
   }
 
@@ -29,6 +31,8 @@ export class ClientActionComponent implements OnInit, AfterViewInit {
       exitAnimationDuration,
     });
   }
+
+
 
 }
 
