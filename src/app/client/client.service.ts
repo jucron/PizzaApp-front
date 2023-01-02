@@ -78,29 +78,18 @@ export class ClientService {
       );
   }
 
-  createProcess(order) {
-    console.log('createProcess worked')
-    // order.account = { username: localStorage.getItem('mainUsername')};
-    console.log("Order to be created: "+order)
-    this.http.post(this.baseFlowableClientUrl+this.getMainUsername(),order)
-      .subscribe((response: Response)=> {
-        console.log('Order created with id:' + response.message);
-        localStorage.setItem('clientOrderId',response.message)
-        this.changeClientTaskStatusAndRedirect('task_1');
+  completeTask(object: Object) {
+    console.log('completeTask worked')
+    this.http.post(this.baseFlowableClientUrl+this.getMainUsername(),object)
+      .subscribe(()=> {
+        console.log('Order created successfully');
+        this.redirectTo('/client',false);
       },
         catchError(this.handleError)
       );
   }
 
-  changeClientTaskStatusAndRedirect(taskClaimed: string) {
-    console.log('changeClientStatus worked')
-    this.http.put(this.baseFlowableClientUrl, {username: this.getMainUsername(), taskStatus: taskClaimed})
-      .subscribe( () => {
-        this.router.navigate(['/client'], {skipLocationChange: true});
-      },
-        catchError(this.handleError)
-      );
-  }
+
 
   getOrder() {
     console.log('getOrder worked')
@@ -119,7 +108,6 @@ export class ClientService {
 
     return throwError('A problem happened, try again.');
   }
-
 
 }
 

@@ -46,7 +46,6 @@ export class OrderStatusComponent implements OnInit, AfterViewInit {
 }
 
   closeTask() {
-    this.clientService.changeClientTaskStatusAndRedirect('task_2');
   }
 
   forwardStatus() {

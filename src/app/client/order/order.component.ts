@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ClientService} from "../client.service";
+import {ClientService, Order} from "../client.service";
 
 @Component({
   selector: 'app-order',
@@ -26,8 +26,8 @@ export class OrderComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSubmit(order) {
-    this.clientService.createProcess(order);
+  onSubmit(order: Order) {
+    this.clientService.completeTask(order);
   }
 
   ngAfterViewInit(): void {
