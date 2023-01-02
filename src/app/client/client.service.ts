@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {catchError, map, throwError} from "rxjs";
+import {catchError, throwError} from "rxjs";
 import {Router} from "@angular/router";
 
 @Injectable({
@@ -22,6 +22,10 @@ export class ClientService {
 
   getMainUsername() {
     return localStorage.getItem(this.mainUsername_key);
+  }
+
+  getCurrentUrl() {
+    return this.router.url;
   }
 
   redirectTo(uri:string, hideLocation: boolean){
@@ -89,22 +93,13 @@ export class ClientService {
       );
   }
 
-
-
   getOrder() {
     console.log('getOrder worked')
-    return this.http.get<Order>(this.baseFlowableClientUrl+this.getMainUsername()+'/order')
-      .pipe(
-        map(
-        (order: Order) => {
-          console.log('order found with status: '+order.status)
-          return order;
-        },
-        catchError(this.handleError)
-      ));
+    return this.http.get<Order>(this.baseFlowableClientUrl+this.getMainUsername()+'/order');
+
   }
 
-  private handleError(error: HttpErrorResponse) {
+  handleError(error: HttpErrorResponse) {
 
     return throwError('A problem happened, try again.');
   }

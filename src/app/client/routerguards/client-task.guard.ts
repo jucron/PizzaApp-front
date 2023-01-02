@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {map, Observable} from 'rxjs';
+import {catchError, map, Observable} from 'rxjs';
 import {ClientService, Response} from "../client.service";
 
 @Injectable({
@@ -19,7 +19,8 @@ export class ClientTaskGuard implements CanActivate {
           console.log('ClientTaskGuard: taskDef found: '+response.message)
           localStorage.setItem(this.clientService.clientTask_key, response.message);
           return true;
-        }
-      ))
+        },
+        catchError(this.clientService.handleError)
+      ));
   };
 }

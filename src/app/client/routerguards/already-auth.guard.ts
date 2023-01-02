@@ -28,6 +28,7 @@ export class AlreadyAuthIn implements CanActivate {
               return true;
             } else {
               console.log('AlreadyAuthGuard: Angular: logged | Server: logged. Redirecting to client-action page');
+              this.router.navigate(['/client/'], {skipLocationChange: false});
               this.router.navigate(['/client/client-action'], {skipLocationChange: true});
               return false;
             }

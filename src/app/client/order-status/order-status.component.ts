@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ClientService, Order} from "../client.service";
 import {interval} from "rxjs";
+import {ClientOrderGuard} from "../routerguards/client-order.guard";
 
 @Component({
   selector: 'app-order-status',
@@ -25,24 +26,23 @@ export class OrderStatusComponent implements OnInit, AfterViewInit {
   }
 
   async updateOrder() {
-    console.log('updateOrder accessed')
-    let count = 1;
     let milliseconds = 20000;
+    console.log('updateOrder function started, will refresh page after '+milliseconds/1000+' seconds.')
     let sub = interval(milliseconds).subscribe(() => {
-      console.log(milliseconds*count/1000+' seconds passed: Running \'updateOrder\' again with count='+count)
-      count++;
-      this.assignOrder();
-      if (this.order.status=='finished') {
+      let currentUrl = this.clientService.getCurrentUrl();
+      if (this.order.status=='finished' || currentUrl != '/client/order-status') {
+        // console.log(currentUrl)
+        console.log("updateOrder function is not necessary anymore, shutting it down.")
         sub.unsubscribe();
+      } else {
+        console.log(milliseconds/1000+' seconds passed: refreshing page again with new Order')
+        this.clientService.redirectTo('client/order-status',true);
       }
     })
   }
 
   assignOrder () {
-    this.clientService.getOrder()
-      .subscribe((orderFetched: Order)=>{
-        this.order = orderFetched;
-      });
+    this.order = ClientOrderGuard.order;
 }
 
   closeTask() {

@@ -24,7 +24,7 @@
                         class="w-120 btn btn-lg btn-info" type="button">Start your process</button>
                 <ng-template #processStarted>
                   <button [disabled]="client_task!='executeOrder'"
-                          [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange="true"
+                          [routerLink]="['/client/order']" class="w-120 btn btn-lg btn-info" skipLocationChange
                           type="button">Continue your process</button>
                 </ng-template>
               </div>
@@ -39,8 +39,8 @@
                 <small class="text-muted fw-light">Here you can follow your Order Status and stop being so
                   anxious!</small>
                 <p></p>
-                <button [disabled]="client_task!='endFollowUp'" [routerLink]="['/client/order-status']"
-                        class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
+                <button [disabled]="client_task!='endFollowUp'" [routerLink]="['/client/order-status']" class="w-120 btn btn-lg btn-info"
+                        skipLocationChange type="button"
                 >Check Status!
                 </button>
               </div>
@@ -55,8 +55,8 @@
                 <small class="text-muted fw-light">The final stage: give us your feedback about the whole
                   service</small>
                 <p></p>
-                <button [disabled]="client_task!='sendFeedback'" [routerLink]="['/client/feedback']"
-                        class="w-120 btn btn-lg btn-info" skipLocationChange="true" type="button"
+                <button [disabled]="client_task!='sendFeedback'" [routerLink]="['/client/feedback']" class="w-120 btn btn-lg btn-info"
+                        skipLocationChange type="button"
                 >Give feedback
                 </button>
               </div>
