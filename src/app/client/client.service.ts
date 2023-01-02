@@ -10,7 +10,7 @@ export class ClientService {
   private baseFlowableClientUrl = 'http://localhost:8081/process/client/';
   private baseAccountUrl = 'http://localhost:8081/accounts/';
   private caseKey = 'pizzaOrderCase';
-  private clientTask_key = 'clientTask';
+  clientTask_key = 'clientTask';
   private mainUsername_key = 'mainUsername';
 
   constructor(private http: HttpClient,
@@ -24,6 +24,11 @@ export class ClientService {
     return localStorage.getItem(this.mainUsername_key);
   }
 
+  redirectTo(uri:string, hideLocation: boolean){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+      this.router.navigate([uri], {skipLocationChange: hideLocation}));
+  }
+
   executeLogin(credentials: Account) {
     console.log('executeLogin worked')
     this.http.post(this.baseAccountUrl+'login', credentials)
@@ -34,7 +39,7 @@ export class ClientService {
             //todo: handle username/password not correct (Security Impl)
           } else {
             localStorage.setItem(this.mainUsername_key,credentials.username)
-            this.router.navigate(['/client/client-action'], {skipLocationChange: true});
+            this.redirectTo('/client/client-action', true);
           }
         },
         catchError(this.handleError)
@@ -59,18 +64,7 @@ export class ClientService {
 
   updateClientTask() {
     console.log('updateClientTask worked ')
-    return this.http.get<Response>(this.baseFlowableClientUrl+this.getMainUsername()+'/taskDef')
-      .pipe(
-        map(
-          (response: Response) => {
-            return response.message;
-          },
-          catchError(this.handleError)
-        ))
-      .subscribe(message => {
-        console.log('updateClientTask: taskDef found: '+message)
-        localStorage.setItem(this.clientTask_key, message);
-      });
+    return this.http.get<Response>(this.baseFlowableClientUrl+this.getMainUsername()+'/taskDef');
   }
 
   startProcess() {
@@ -78,7 +72,7 @@ export class ClientService {
     // @ts-ignore
     this.http.post(this.baseFlowableClientUrl+this.caseKey+'/'+this.getMainUsername())
       .subscribe(()=> {
-          this.router.navigate(['/client'], {skipLocationChange: true});
+        this.redirectTo('/client', false);
         },
         catchError(this.handleError)
       );
@@ -136,7 +130,7 @@ export interface Account {
   loginStatus: string;
   taskStatus: string;
 }
-interface Response {
+export interface Response {
   message: string;
 }
 export interface Order {

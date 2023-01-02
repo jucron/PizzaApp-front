@@ -11,7 +11,7 @@ export class NoAuthGuard implements CanActivate {
               private router: Router) {  }
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean | UrlTree {
 
     if (localStorage.getItem('mainUsername') == null) {
       console.log('NoAuthGuard: not logged in Angular, redirecting to Login Page')

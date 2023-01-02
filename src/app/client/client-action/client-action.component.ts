@@ -18,8 +18,6 @@ export class ClientActionComponent implements OnInit, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    //todo: BUG for async response of this variable
-    this.clientService.updateClientTask()
     this.client_task = this.clientService.getClientTask();
     console.log('client_task is: '+this.client_task);
   }
