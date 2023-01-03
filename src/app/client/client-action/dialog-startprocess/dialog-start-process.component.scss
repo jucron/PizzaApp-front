@@ -9,7 +9,13 @@ $my-theme: mat.define-light-theme((
   color: (
     primary: $my-primary,
     accent: $my-accent,
-  )
+  ),
 ));
+
+.container {
+  background-color: #fbfafb;
+  border: black;
+}
+
 
 @include mat.all-component-themes($my-theme);
